@@ -1,6 +1,0 @@
-#caso de if / else
-int edad = Read();
-if (edad >= 18)
-    Write("Mayor de edad")
-else
-    Write("Menor de edad")
