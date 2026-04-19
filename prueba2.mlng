@@ -1,0 +1,6 @@
+int term1 = 2;
+int term2 = 2;
+int term3 = 0;
+
+c = a + b;
+Write(c)
