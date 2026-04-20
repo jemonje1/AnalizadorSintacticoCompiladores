@@ -1,75 +1,85 @@
 package Archivo;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Manejo de archivos MiniLang (.mlng).
  */
 public class ArchivoMiniLang {
 
-    // region METODOS - LECTURA
+    private final String extensionPermitida;
+
+    public ArchivoMiniLang() {
+        this.extensionPermitida = ".mlng";
+    }
+
     /**
      * Valida que la ruta exista y que el archivo tenga extensión .mlng.
      *
-     * @param rutaArchivo ruta a validar
+     * @param rutaArchivo ruta del archivo
      * @return Path del archivo
-     * @throws IOException si el archivo no existe o no es .mlng
+     * @throws IOException si la ruta no existe o la extensión es inválida
      */
     public Path validarArchivo(String rutaArchivo) throws IOException {
-        Path path = Paths.get(rutaArchivo);
-        if (!Files.exists(path)) {
+        Path rutaValida = Paths.get(rutaArchivo);
+
+        if (!Files.exists(rutaValida)) {
             throw new IOException("El archivo no existe: " + rutaArchivo);
         }
-        if (!rutaArchivo.toLowerCase().endsWith(".mlng")) {
-            throw new IOException("Extensión invalida. Debe ser .mlng");
+
+        if (!esExtensionValida(rutaArchivo)) {
+            throw new IOException("La extensión del archivo es inválida. Debe ser " + extensionPermitida);
         }
-        return path;
+
+        return rutaValida;
     }
 
     /**
-     * Lee el archivo línea por línea respetando UTF-8.
+     * Abre un Reader para el archivo MiniLang.
      *
-     * @param rutaArchivo ruta del archivo .mlng
-     * @return lista de líneas del archivo
-     * @throws IOException error de lectura
+     * @param rutaArchivo ruta del archivo
+     * @return Reader listo para el lexer
+     * @throws IOException si ocurre un error al abrir el archivo
      */
-    public List<String> leerLineas(String rutaArchivo) throws IOException {
-        Path path = validarArchivo(rutaArchivo);
-        List<String> lineas = new ArrayList<>();
-
-        try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                // readLine() no incluye el salto, lo manejamos en el lexer
-                lineas.add(linea);
-            }
-        }
-
-        return lineas;
+    public Reader abrirReader(String rutaArchivo) throws IOException {
+        Path rutaValida = validarArchivo(rutaArchivo);
+        return Files.newBufferedReader(rutaValida, StandardCharsets.UTF_8);
     }
-    // endregion
 
-    // region METODOS - SALIDA
     /**
-     * Genera la ruta del archivo .out en la misma carpeta del .mlng.
+     * Verifica si la ruta tiene la extensión permitida.
+     *
+     * @param rutaArchivo ruta del archivo
+     * @return true si la extensión es válida
+     */
+    public boolean esExtensionValida(String rutaArchivo) {
+        return rutaArchivo != null && rutaArchivo.toLowerCase().endsWith(extensionPermitida);
+    }
+
+    /**
+     * Genera la ruta del archivo de salida.
      *
      * @param rutaArchivo ruta del archivo de entrada
-     * @return ruta del archivo de salida
+     * @return ruta del archivo .out
      */
     public Path obtenerRutaSalida(String rutaArchivo) {
-        Path in = Paths.get(rutaArchivo);
-        String nombre = in.getFileName().toString();
-        int idx = nombre.lastIndexOf('.');
-        String base = (idx >= 0) ? nombre.substring(0, idx) : nombre;
-        String outName = base + ".out";
-        return (in.getParent() == null) ? Paths.get(outName) : in.getParent().resolve(outName);
+        Path rutaEntrada = Paths.get(rutaArchivo);
+        String nombreArchivo = rutaEntrada.getFileName().toString();
+
+        int indicePunto = nombreArchivo.lastIndexOf('.');
+        String nombreBase = (indicePunto >= 0) ? nombreArchivo.substring(0, indicePunto) : nombreArchivo;
+
+        String nombreSalida = nombreBase + ".out";
+
+        if (rutaEntrada.getParent() == null) {
+            return Paths.get(nombreSalida);
+        }
+
+        return rutaEntrada.getParent().resolve(nombreSalida);
     }
-    // endregion
 }
