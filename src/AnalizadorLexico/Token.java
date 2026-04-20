@@ -132,7 +132,7 @@ public class Token {
         tokensEnOrden.add(info);
 
         // patrón de referencia: guardar en HashMap
-        if (lexema != null && !lexema.isEmpty() && tipo != TipoToken.UNKNOWN) {
+        if (lexema != null && !lexema.isEmpty() && tipo != TipoToken.DESCONOCIDO) {
             if (!tokens.containsKey(lexema)) {
                 tokens.put(lexema, tipo.name());
             }
