@@ -1,0 +1,88 @@
+package AnalizadorSintactico;
+
+import java_cup.runtime.Symbol;
+
+// Código para el parser y manejo de errores
+parser code
+{:
+    private Symbol s;
+
+    public void syntax_error(Symbol s){
+        this.s = s;
+        System.err.println("Error Sintactico en la Linea " + (s.left) + " Columna " + (s.right) + ". Texto: \"" + s.value + "\"");
+    }
+
+    public Symbol getS(){
+        return this.s;
+    }
+:};
+
+/* ------------------ DECLARACIÓN DE TERMINALES ------------------ */
+// Mapeados exactamente de vuestro Token.java y LexerCup.flex
+
+// Palabras reservadas
+terminal INT, FLOAT, STRING, BOOL, IF, ELSE, FOR, WHILE, TRUE, FALSE, READ, WRITE;
+
+// Identificadores y literales
+terminal String ID, INTNUM, FLOATNUM, PERNUM, STRINGWORD;
+
+// Operadores y símbolos
+terminal LLAVEIZQ, LLAVEDER, PARENIZQ, PARENDER, PYC, COMA;
+terminal SUM, REST, MULT, DIV, IGUAL;
+terminal MENOR, MAYOR, MEIGUAL, MAIGUAL, ESIGUAL, NOIGUAL;
+terminal INC, DEC, NOT;
+
+// Control de flujo (Pila de Identación) y espacios
+terminal NEWLINE, INDENT, DEDENT, EOF, DESCONOCIDO;
+
+/* ------------------ DECLARACIÓN DE NO TERMINALES ------------------ */
+
+non terminal INICIO, SENTENCIAS, SENTENCIA;
+non terminal DECLARACION, EXPRESION, ESTRUCTURA_CONTROL, OPERACION;
+
+/* ------------------ PRECEDENCIAS (Requerido por la Fase 2) ------------------ */
+precedence left SUM, REST;
+precedence left MULT, DIV;
+precedence right NOT;
+precedence left MENOR, MAYOR, MEIGUAL, MAIGUAL, ESIGUAL, NOIGUAL;
+
+/* ------------------ REGLAS DE LA GRAMÁTICA ------------------ */
+
+start with INICIO;
+
+// El programa es una lista de sentencias (vuestro flujo original)
+INICIO ::= SENTENCIAS
+;
+
+SENTENCIAS ::= SENTENCIAS SENTENCIA
+            | SENTENCIA
+            | /* vacio */
+;
+
+SENTENCIA ::= DECLARACION
+            | ESTRUCTURA_CONTROL
+            | EXPRESION PYC
+            | NEWLINE
+            | error NEWLINE  // Recuperación de errores: salta a la siguiente línea
+;
+
+// Ejemplo de cómo se irán construyendo las reglas según vuestro diseño
+DECLARACION ::= INT ID IGUAL EXPRESION PYC
+              | FLOAT ID IGUAL EXPRESION PYC
+              | BOOL ID IGUAL EXPRESION PYC
+              | STRING ID IGUAL STRINGWORD PYC
+;
+
+EXPRESION ::= EXPRESION SUM EXPRESION
+            | EXPRESION REST EXPRESION
+            | EXPRESION MULT EXPRESION
+            | EXPRESION DIV EXPRESION
+            | PARENIZQ EXPRESION PARENDER
+            | INTNUM
+            | FLOATNUM
+            | ID
+;
+
+ESTRUCTURA_CONTROL ::= IF PARENIZQ EXPRESION PARENDER LLAVEIZQ SENTENCIAS LLAVEDER
+                    | WHILE PARENIZQ EXPRESION PARENDER LLAVEIZQ SENTENCIAS LLAVEDER
+;

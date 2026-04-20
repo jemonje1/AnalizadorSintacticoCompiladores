@@ -18,7 +18,7 @@ public class Token {
      */
     public enum TipoToken {
         // Palabras reservadas
-        INT,   
+        INT,
         FLOAT,
         STRING,
         BOOL,
@@ -32,44 +32,44 @@ public class Token {
         WRITE,
 
         // Identificadores y literales
-        ID,             // ID 
-        INTNUM,         // ENTERO
-        FLOATNUM,       // FLOTANTE
-        PERNUM,         // PORCENTAJE
-        STRINGWORD,     // LITERAL DE CADENA CON COMILLAS
+        ID,
+        INTNUM,
+        FLOATNUM,
+        PERNUM,
+        STRINGWORD,
 
         // Operadores y símbolos
-        LLAVEIZQ,   // {
-        LLAVEDER,   // }
-        PARENIZQ,   // (
-        PARENDER,   // )
+        LLAVEIZQ,      // {
+        LLAVEDER,      // }
+        PARENIZQ,      // (
+        PARENDER,      // )
         PYC,        // ;
         COMA,       // ,
 
-        SUM,         // +
-        REST,        // -
+        SUM,        // +
+        REST,       // -
         MULT,        // *
-        DIV,         // /
-        IGUAL,       // =
+        DIV,       // /
+        IGUAL,      // =
 
         MENOR,          // <
         MAYOR,          // >
-        MEIGUAL,        // <=
-        MAIGUAL,        // >=
-        ESIGUAL,        // ==
-        NOIGUAL,        // !=
+        MEIGUAL,          // <=
+        MAIGUAL,          // >=
+        ESIGUAL,          // ==
+        NOIGUAL,          // !=
 
         INC,         // ++
         DEC,         // --
         NOT,         // !
 
         // Espacios en blanco
-        NEWLINE,      //SALTO DE LINEA
-        INDENT,       //Agrega \t
-        DEDENT,       //Elimina \t
+        NEWLINE,
+        INDENT,
+        DEDENT,
 
         //Fin de archivo
-        EOF,          //$
+        EOF,
 
         // Desconocido
         DESCONOCIDO
@@ -78,7 +78,7 @@ public class Token {
 
     // region CLASE - TOKENINFO
     /**
-     * Estructura para un token con posicion
+     * Estructura para un token con posición.
      */
     public static class TokenInfo {
         public final TipoToken tipo;
@@ -123,7 +123,7 @@ public class Token {
      *
      * @param tipo tipo del token
      * @param lexema lexema (valor)
-     * @param linea linea
+     * @param linea línea
      * @param colInicio columna inicial
      * @param colFin columna final
      */
@@ -132,7 +132,7 @@ public class Token {
         tokensEnOrden.add(info);
 
         // patrón de referencia: guardar en HashMap
-        if (lexema != null && !lexema.isEmpty() && tipo != TipoToken.DESCONOCIDO) {
+        if (lexema != null && !lexema.isEmpty() && tipo != TipoToken.UNKNOWN) {
             if (!tokens.containsKey(lexema)) {
                 tokens.put(lexema, tipo.name());
             }
