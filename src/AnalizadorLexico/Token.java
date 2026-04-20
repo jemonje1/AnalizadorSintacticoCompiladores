@@ -18,65 +18,67 @@ public class Token {
      */
     public enum TipoToken {
         // Palabras reservadas
-        KW_INT,
-        KW_FLOAT,
-        KW_STRING,
-        KW_BOOL,
-        KW_IF,
-        KW_ELSE,
-        KW_FOR,
-        KW_WHILE,
-        KW_TRUE,
-        KW_FALSE,
-        KW_READ,
-        KW_WRITE,
+        INT,   
+        FLOAT,
+        STRING,
+        BOOL,
+        IF,
+        ELSE,
+        FOR,
+        WHILE,
+        TRUE,
+        FALSE,
+        READ,
+        WRITE,
 
         // Identificadores y literales
-        ID,
-        INTNUM,
-        FLOATNUM,
-        PERNUM,
-        STRING_LIT,
+        ID,             // ID 
+        INTNUM,         // ENTERO
+        FLOATNUM,       // FLOTANTE
+        PERNUM,         // PORCENTAJE
+        STRINGWORD,     // LITERAL DE CADENA CON COMILLAS
 
         // Operadores y símbolos
-        LBRACE,      // {
-        RBRACE,      // }
-        LPAREN,      // (
-        RPAREN,      // )
-        SEMI,        // ;
-        COMMA,       // ,
+        LLAVEIZQ,   // {
+        LLAVEDER,   // }
+        PARENIZQ,   // (
+        PARENDER,   // )
+        PYC,        // ;
+        COMA,       // ,
 
-        PLUS,        // +
-        MINUS,       // -
-        STAR,        // *
-        SLASH,       // /
-        ASSIGN,      // =
+        SUM,         // +
+        REST,        // -
+        MULT,        // *
+        DIV,         // /
+        IGUAL,       // =
 
-        LT,          // <
-        GT,          // >
-        LE,          // <=
-        GE,          // >=
-        EQ,          // ==
-        NE,          // !=
+        MENOR,          // <
+        MAYOR,          // >
+        MEIGUAL,        // <=
+        MAIGUAL,        // >=
+        ESIGUAL,        // ==
+        NOIGUAL,        // !=
 
         INC,         // ++
         DEC,         // --
         NOT,         // !
 
-        // Control de flujo
-        NEWLINE,
-        INDENT,
-        DEDENT,
-        EOF,
+        // Espacios en blanco
+        NEWLINE,      //SALTO DE LINEA
+        INDENT,       //Agrega \t
+        DEDENT,       //Elimina \t
+
+        //Fin de archivo
+        EOF,          //$
 
         // Desconocido
-        UNKNOWN
+        DESCONOCIDO
     }
     // endregion
 
     // region CLASE - TOKENINFO
     /**
-     * Estructura para un token con posición.
+     * Estructura para un token con posicion
      */
     public static class TokenInfo {
         public final TipoToken tipo;
@@ -121,7 +123,7 @@ public class Token {
      *
      * @param tipo tipo del token
      * @param lexema lexema (valor)
-     * @param linea línea
+     * @param linea linea
      * @param colInicio columna inicial
      * @param colFin columna final
      */
@@ -130,7 +132,7 @@ public class Token {
         tokensEnOrden.add(info);
 
         // patrón de referencia: guardar en HashMap
-        if (lexema != null && !lexema.isEmpty() && tipo != TipoToken.UNKNOWN) {
+        if (lexema != null && !lexema.isEmpty() && tipo != TipoToken.DESCONOCIDO) {
             if (!tokens.containsKey(lexema)) {
                 tokens.put(lexema, tipo.name());
             }
