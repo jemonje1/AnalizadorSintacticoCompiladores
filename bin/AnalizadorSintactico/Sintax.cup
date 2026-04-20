@@ -17,90 +17,124 @@ parser code
     }
 :};
 
-/* ------------------ DECLARACIÓN DE TERMINALES ------------------ */
+/* ===================== DECLARACIÓN DE TERMINALES ===================== */
 
 // Palabras reservadas
 terminal INT, FLOAT, STRING, BOOL, IF, ELSE, FOR, WHILE, TRUE, FALSE, READ, WRITE;
 
 // Identificadores y literales
-terminal String ID, INTNUM, FLOATNUM, PERNUM, STRINGWORD;
+terminal String ID, INTNUM, FLOATNUM, STRINGWORD;
 
 // Operadores y símbolos
-terminal LLAVEIZQ, LLAVEDER, PARENIZQ, PARENDER, PYC, COMA;
+terminal LLAVEIZQ, LLAVEDER, PARENIZQ, PARENDER, PYC;
 terminal SUM, REST, MULT, DIV, IGUAL;
 terminal MENOR, MAYOR, MEIGUAL, MAIGUAL, ESIGUAL, NOIGUAL;
-terminal INC, DEC, NOT;
+terminal NOT;
 
 // Control de flujo
-terminal NEWLINE, INDENT, DEDENT, EOF, DESCONOCIDO;
+terminal NEWLINE;
 
-/* ------------------ DECLARACIÓN DE NO TERMINALES ------------------ */
+/* ==================== DECLARACIÓN DE NO TERMINALES ==================== */
 
-non terminal INICIO, SENTENCIAS, SENTENCIA, BLOQUE;
-non terminal DECLARACION, EXPRESION, ESTRUCTURA_CONTROL, ESCRITURA;
+non terminal Object programa;
+non terminal Object lista_sentencias;
+non terminal Object sentencia;
+non terminal Object declaracion;
+non terminal Object asignacion;
+non terminal Object escritura;
+non terminal Object lectura;
+non terminal Object estructura_control;
+non terminal Object bloque;
+non terminal Object lista_sentencias_bloque;
+non terminal Object expresion;
 
-/* ------------------ PRECEDENCIAS ------------------ */
+/* ===================== PRECEDENCIAS ===================== */
 precedence left ESIGUAL, NOIGUAL, MENOR, MAYOR, MEIGUAL, MAIGUAL;
 precedence left SUM, REST;
 precedence left MULT, DIV;
 precedence right NOT;
 
-/* ------------------ REGLAS DE LA GRAMÁTICA ------------------ */
+/* ===================== REGLAS DE LA GRAMÁTICA ===================== */
 
-start with INICIO;
+start with programa;
 
-INICIO ::= SENTENCIAS EOF
-;
+// Programa principal
+programa ::= lista_sentencias
+           | /* vacio */
+           ;
 
-SENTENCIAS ::= SENTENCIAS SENTENCIA
-             | SENTENCIA
-             | /* vacio */
-;
+// Lista de sentencias
+lista_sentencias ::= lista_sentencias sentencia
+                   | sentencia
+                   ;
 
-SENTENCIA ::= DECLARACION
-            | ESTRUCTURA_CONTROL
-            | ESCRITURA
-            | EXPRESION PYC
+// Sentencias individuales
+sentencia ::= declaracion
+            | asignacion
+            | escritura
+            | lectura
+            | estructura_control
             | NEWLINE
-            | INDENT
-            | DEDENT
             | error NEWLINE
-;
+            ;
 
-DECLARACION ::= INT ID IGUAL EXPRESION PYC
-              | FLOAT ID IGUAL EXPRESION PYC
-              | BOOL ID IGUAL EXPRESION PYC
+// Declaraciones
+declaracion ::= INT ID PYC
+              | INT ID IGUAL expresion PYC
+              | FLOAT ID PYC
+              | FLOAT ID IGUAL expresion PYC
+              | STRING ID PYC
               | STRING ID IGUAL STRINGWORD PYC
-;
+              | BOOL ID PYC
+              | BOOL ID IGUAL expresion PYC
+              ;
 
-ESCRITURA ::= WRITE PARENIZQ EXPRESION PARENDER PYC
-;
+// Asignaciones
+asignacion ::= ID IGUAL expresion PYC
+             ;
 
-BLOQUE ::= LLAVEIZQ SENTENCIAS LLAVEDER
-;
+// Escritura
+escritura ::= WRITE PARENIZQ expresion PARENDER PYC
+            ;
 
-ESTRUCTURA_CONTROL ::= IF PARENIZQ EXPRESION PARENDER BLOQUE
-                     | IF PARENIZQ EXPRESION PARENDER BLOQUE ELSE BLOQUE
-                     | WHILE PARENIZQ EXPRESION PARENDER BLOQUE
-;
+// Lectura
+lectura ::= READ PARENIZQ PARENDER PYC
+          ;
 
-EXPRESION ::= EXPRESION SUM EXPRESION
-            | EXPRESION REST EXPRESION
-            | EXPRESION MULT EXPRESION
-            | EXPRESION DIV EXPRESION
-            | EXPRESION MENOR EXPRESION
-            | EXPRESION MAYOR EXPRESION
-            | EXPRESION MEIGUAL EXPRESION
-            | EXPRESION MAIGUAL EXPRESION
-            | EXPRESION ESIGUAL EXPRESION
-            | EXPRESION NOIGUAL EXPRESION
-            | NOT EXPRESION
-            | PARENIZQ EXPRESION PARENDER
+// Estructuras de control
+estructura_control ::= IF PARENIZQ expresion PARENDER bloque
+                     | IF PARENIZQ expresion PARENDER bloque ELSE bloque
+                     | WHILE PARENIZQ expresion PARENDER bloque
+                     | FOR PARENIZQ asignacion expresion PYC asignacion PARENDER bloque
+                     ;
+
+// Bloques de código
+bloque ::= LLAVEIZQ lista_sentencias_bloque LLAVEDER
+         | LLAVEIZQ LLAVEDER
+         ;
+
+// Lista de sentencias dentro de un bloque
+lista_sentencias_bloque ::= lista_sentencias_bloque sentencia
+                          | sentencia
+                          ;
+
+// Expresiones
+expresion ::= expresion SUM expresion
+            | expresion REST expresion
+            | expresion MULT expresion
+            | expresion DIV expresion
+            | expresion MENOR expresion
+            | expresion MAYOR expresion
+            | expresion MEIGUAL expresion
+            | expresion MAIGUAL expresion
+            | expresion ESIGUAL expresion
+            | expresion NOIGUAL expresion
+            | NOT expresion
+            | PARENIZQ expresion PARENDER
+            | ID
             | INTNUM
             | FLOATNUM
             | STRINGWORD
             | TRUE
             | FALSE
-            | ID
-            | READ PARENIZQ PARENDER
-;
+            ;

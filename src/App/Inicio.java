@@ -1,6 +1,13 @@
 package App;
 
 import AnalizadorSintactico.AnalizadorSintactico;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Scanner;
 
 /**
@@ -22,6 +29,7 @@ public class Inicio {
      * Inicia el menú principal.
      */
     public void iniciar() {
+        generarAnalizadores();
         boolean abierto = true;
 
         while (abierto) {
@@ -139,6 +147,63 @@ public class Inicio {
             } catch (NumberFormatException e) {
                 System.out.print("Entrada invalida. Ingrese un numero valido: ");
             }
+        }
+    }
+
+    /**
+     * Genera los analizadores léxico y sintáctico usando JFlex y CUP.
+     */
+    private void generarAnalizadores() {
+        try {
+            String rootPath = System.getProperty("user.dir");
+            String rutaLexer = rootPath + File.separator + "src" + File.separator + "AnalizadorLexico" + File.separator + "Lexer.flex";
+            String rutaLexerCup = rootPath + File.separator + "src" + File.separator + "AnalizadorLexico" + File.separator + "LexerCup.flex";
+            String rutaSintax = rootPath + File.separator + "src" + File.separator + "AnalizadorSintactico" + File.separator + "Sintax.cup";
+            
+            String[] rutaCup = {"-parser", "Sintax", rutaSintax};
+
+            // Generar Lexer.java
+            System.out.println("Generando Lexer.java...");
+            File archivoLexer = new File(rutaLexer);
+            jflex.Main.generate(archivoLexer);
+
+            // Generar LexerCup.java
+            System.out.println("Generando LexerCup.java...");
+            File archivoLexerCup = new File(rutaLexerCup);
+            jflex.Main.generate(archivoLexerCup);
+
+            // Generar Sintax.java y sym.java
+            System.out.println("Generando Sintax.java y sym.java...");
+            java_cup.Main.main(rutaCup);
+
+            // Mover sym.java a la carpeta correcta
+            Path rutaSymOrigen = Paths.get(rootPath + File.separator + "sym.java");
+            Path rutaSymDestino = Paths.get(rootPath + File.separator + "src" + File.separator + "AnalizadorSintactico" + File.separator + "sym.java");
+            
+            if (Files.exists(rutaSymOrigen)) {
+                if (Files.exists(rutaSymDestino)) {
+                    Files.delete(rutaSymDestino);
+                }
+                Files.move(rutaSymOrigen, rutaSymDestino);
+                System.out.println("sym.java movido correctamente.");
+            }
+
+            // Mover Sintax.java a la carpeta correcta
+            Path rutaSintaxOrigen = Paths.get(rootPath + File.separator + "Sintax.java");
+            Path rutaSintaxDestino = Paths.get(rootPath + File.separator + "src" + File.separator + "AnalizadorSintactico" + File.separator + "Sintax.java");
+            
+            if (Files.exists(rutaSintaxOrigen)) {
+                if (Files.exists(rutaSintaxDestino)) {
+                    Files.delete(rutaSintaxDestino);
+                }
+                Files.move(rutaSintaxOrigen, rutaSintaxDestino);
+                System.out.println("Sintax.java movido correctamente.");
+            }
+
+            System.out.println("¡Analizadores generados con éxito!");
+        } catch (Exception e) {
+            System.err.println("Error generando archivos: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

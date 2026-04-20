@@ -1,5 +1,6 @@
 package AnalizadorSintactico;
 
+import java.nio.file.StandardCopyOption;
 import AnalizadorLexico.LexerCup;
 import Archivo.ArchivoMiniLang;
 import java.io.Reader;
