@@ -18,7 +18,6 @@ parser code
 :};
 
 /* ------------------ DECLARACIÓN DE TERMINALES ------------------ */
-// Mapeados exactamente de vuestro Token.java y LexerCup.flex
 
 // Palabras reservadas
 terminal INT, FLOAT, STRING, BOOL, IF, ELSE, FOR, WHILE, TRUE, FALSE, READ, WRITE;
@@ -32,57 +31,76 @@ terminal SUM, REST, MULT, DIV, IGUAL;
 terminal MENOR, MAYOR, MEIGUAL, MAIGUAL, ESIGUAL, NOIGUAL;
 terminal INC, DEC, NOT;
 
-// Control de flujo (Pila de Identación) y espacios
+// Control de flujo
 terminal NEWLINE, INDENT, DEDENT, EOF, DESCONOCIDO;
 
 /* ------------------ DECLARACIÓN DE NO TERMINALES ------------------ */
 
-non terminal INICIO, SENTENCIAS, SENTENCIA;
-non terminal DECLARACION, EXPRESION, ESTRUCTURA_CONTROL, OPERACION;
+non terminal INICIO, SENTENCIAS, SENTENCIA, BLOQUE;
+non terminal DECLARACION, EXPRESION, ESTRUCTURA_CONTROL, ESCRITURA;
 
-/* ------------------ PRECEDENCIAS (Requerido por la Fase 2) ------------------ */
+/* ------------------ PRECEDENCIAS ------------------ */
+precedence left ESIGUAL, NOIGUAL, MENOR, MAYOR, MEIGUAL, MAIGUAL;
 precedence left SUM, REST;
 precedence left MULT, DIV;
 precedence right NOT;
-precedence left MENOR, MAYOR, MEIGUAL, MAIGUAL, ESIGUAL, NOIGUAL;
 
 /* ------------------ REGLAS DE LA GRAMÁTICA ------------------ */
 
 start with INICIO;
 
-// El programa es una lista de sentencias (vuestro flujo original)
-INICIO ::= SENTENCIAS
+INICIO ::= SENTENCIAS EOF
 ;
 
 SENTENCIAS ::= SENTENCIAS SENTENCIA
-            | SENTENCIA
-            | /* vacio */
+             | SENTENCIA
+             | /* vacio */
 ;
 
 SENTENCIA ::= DECLARACION
             | ESTRUCTURA_CONTROL
+            | ESCRITURA
             | EXPRESION PYC
             | NEWLINE
-            | error NEWLINE  // Recuperación de errores: salta a la siguiente línea
+            | INDENT
+            | DEDENT
+            | error NEWLINE
 ;
 
-// Ejemplo de cómo se irán construyendo las reglas según vuestro diseño
 DECLARACION ::= INT ID IGUAL EXPRESION PYC
               | FLOAT ID IGUAL EXPRESION PYC
               | BOOL ID IGUAL EXPRESION PYC
               | STRING ID IGUAL STRINGWORD PYC
 ;
 
+ESCRITURA ::= WRITE PARENIZQ EXPRESION PARENDER PYC
+;
+
+BLOQUE ::= LLAVEIZQ SENTENCIAS LLAVEDER
+;
+
+ESTRUCTURA_CONTROL ::= IF PARENIZQ EXPRESION PARENDER BLOQUE
+                     | IF PARENIZQ EXPRESION PARENDER BLOQUE ELSE BLOQUE
+                     | WHILE PARENIZQ EXPRESION PARENDER BLOQUE
+;
+
 EXPRESION ::= EXPRESION SUM EXPRESION
             | EXPRESION REST EXPRESION
             | EXPRESION MULT EXPRESION
             | EXPRESION DIV EXPRESION
+            | EXPRESION MENOR EXPRESION
+            | EXPRESION MAYOR EXPRESION
+            | EXPRESION MEIGUAL EXPRESION
+            | EXPRESION MAIGUAL EXPRESION
+            | EXPRESION ESIGUAL EXPRESION
+            | EXPRESION NOIGUAL EXPRESION
+            | NOT EXPRESION
             | PARENIZQ EXPRESION PARENDER
             | INTNUM
             | FLOATNUM
+            | STRINGWORD
+            | TRUE
+            | FALSE
             | ID
-;
-
-ESTRUCTURA_CONTROL ::= IF PARENIZQ EXPRESION PARENDER LLAVEIZQ SENTENCIAS LLAVEDER
-                    | WHILE PARENIZQ EXPRESION PARENDER LLAVEIZQ SENTENCIAS LLAVEDER
+            | READ PARENIZQ PARENDER
 ;
