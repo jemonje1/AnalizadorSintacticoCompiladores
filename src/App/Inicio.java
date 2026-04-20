@@ -19,6 +19,7 @@ public class Inicio {
         this.scanner = new Scanner(System.in);
         this.analizador = null;
         this.rutaArchivo = null;
+        boolean i = false;
     }
     // endregion
 
