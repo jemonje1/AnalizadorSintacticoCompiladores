@@ -1,0 +1,9 @@
+int contador = 0;
+int suma = 0;
+write("Ingresa números (termina cuando sea 0):");
+read(contador);
+while (contador != 0)
+    suma = suma + contador;
+    read(contador);
+write("La suma total es:");
+write(suma);

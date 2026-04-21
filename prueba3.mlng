@@ -1,0 +1,6 @@
+int numero = 0;
+read(numero);
+if (numero > 0)
+    write("El número es positivo");
+else
+    write("El número no es positivo");

@@ -1,14 +1,14 @@
 package Archivo;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Manejo de archivos MiniLang (.mlng).
+ * Clase encargada del manejo de archivos para el compilador MiniLang.
+ * Valida extensiones .mlng y gestiona la creación de archivos .out.
  */
 public class ArchivoMiniLang {
 
@@ -19,67 +19,60 @@ public class ArchivoMiniLang {
     }
 
     /**
-     * Valida que la ruta exista y que el archivo tenga extensión .mlng.
-     *
-     * @param rutaArchivo ruta del archivo
-     * @return Path del archivo
-     * @throws IOException si la ruta no existe o la extensión es inválida
+     * Valida que la ruta exista y que el archivo tenga la extensión permitida.
+     * * @param rutaArchivo Ruta proporcionada por el usuario.
+     * @return Path objeto de la ruta validada.
+     * @throws IOException Si el archivo no existe o la extensión es incorrecta.
      */
     public Path validarArchivo(String rutaArchivo) throws IOException {
-        Path rutaValida = Paths.get(rutaArchivo);
+        Path ruta = Paths.get(rutaArchivo);
 
-        if (!Files.exists(rutaValida)) {
-            throw new IOException("El archivo no existe: " + rutaArchivo);
+        if (!Files.exists(ruta)) {
+            throw new IOException("Error: El archivo no existe en la ruta especificada: " + rutaArchivo);
         }
 
         if (!esExtensionValida(rutaArchivo)) {
-            throw new IOException("La extensión del archivo es inválida. Debe ser " + extensionPermitida);
+            throw new IOException("Error: Extension invalida. El archivo debe ser de tipo " + extensionPermitida);
         }
 
-        return rutaValida;
+        return ruta;
     }
 
     /**
-     * Abre un Reader para el archivo MiniLang.
-     *
-     * @param rutaArchivo ruta del archivo
-     * @return Reader listo para el lexer
-     * @throws IOException si ocurre un error al abrir el archivo
-     */
-    public Reader abrirReader(String rutaArchivo) throws IOException {
-        Path rutaValida = validarArchivo(rutaArchivo);
-        return Files.newBufferedReader(rutaValida, StandardCharsets.UTF_8);
-    }
-
-    /**
-     * Verifica si la ruta tiene la extensión permitida.
-     *
-     * @param rutaArchivo ruta del archivo
-     * @return true si la extensión es válida
+     * Verifica si el nombre del archivo termina con la extensión permitida.
      */
     public boolean esExtensionValida(String rutaArchivo) {
         return rutaArchivo != null && rutaArchivo.toLowerCase().endsWith(extensionPermitida);
     }
 
     /**
-     * Genera la ruta del archivo de salida.
-     *
-     * @param rutaArchivo ruta del archivo de entrada
-     * @return ruta del archivo .out
+     * Genera la ruta para el archivo de salida (.out) en la misma carpeta del original.
+     * * @param rutaEntrada String de la ruta del archivo original.
+     * @return Path de la ruta donde se escribirá el reporte.
      */
-    public Path obtenerRutaSalida(String rutaArchivo) {
-        Path rutaEntrada = Paths.get(rutaArchivo);
-        String nombreArchivo = rutaEntrada.getFileName().toString();
+    public Path obtenerRutaSalida(String rutaEntrada) {
+        Path entrada = Paths.get(rutaEntrada);
+        String nombreArchivo = entrada.getFileName().toString();
 
+        // Remover la extensión original y agregar .out
         int indicePunto = nombreArchivo.lastIndexOf('.');
         String nombreBase = (indicePunto >= 0) ? nombreArchivo.substring(0, indicePunto) : nombreArchivo;
-
         String nombreSalida = nombreBase + ".out";
 
-        if (rutaEntrada.getParent() == null) {
+        // Si el archivo no tiene carpeta padre (está en la raíz del proyecto)
+        if (entrada.getParent() == null) {
             return Paths.get(nombreSalida);
         }
 
-        return rutaEntrada.getParent().resolve(nombreSalida);
+        // Resolver la nueva ruta en el mismo directorio que el archivo original
+        return entrada.getParent().resolve(nombreSalida);
+    }
+
+    /**
+     * Método de conveniencia para leer todo el contenido de un archivo de texto.
+     */
+    public String leerContenido(String ruta) throws IOException {
+        Path path = validarArchivo(ruta);
+        return Files.readString(path, StandardCharsets.UTF_8);
     }
 }

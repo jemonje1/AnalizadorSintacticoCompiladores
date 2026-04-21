@@ -12,44 +12,39 @@ public class PilaIdentacion {
     private final Deque<Integer> niveles;
     private final int maxNiveles;
 
+    /**
+     * Inicializa la pila con el nivel base 0.
+     * @param maxNiveles El límite máximo de profundidad permitido.
+     */
     public PilaIdentacion(int maxNiveles) {
         this.niveles = new ArrayDeque<>();
         this.maxNiveles = maxNiveles;
-        this.niveles.push(0);
+        this.niveles.push(0); // El nivel base siempre es 0
     }
 
     /**
-     * Retorna el nivel actual de la pila.
-     *
-     * @return nivel actual
+     * Retorna el nivel de espacios actual en el tope de la pila.
      */
     public int getNivelActual() {
         return niveles.peek();
     }
 
     /**
-     * Indica si un nivel ya existe en la pila.
-     *
-     * @param nivel nivel a buscar
-     * @return true si existe
+     * Indica si un nivel específico ya existe en la pila.
      */
     public boolean contieneNivel(int nivel) {
         return niveles.contains(nivel);
     }
 
     /**
-     * Agrega un nuevo nivel a la pila.
-     *
-     * @param nivel nivel a apilar
+     * Agrega un nuevo nivel de indentación a la pila.
      */
     public void apilarNivel(int nivel) {
         niveles.push(nivel);
     }
 
     /**
-     * Elimina el nivel superior de la pila, sin quitar el 0 base.
-     *
-     * @return nivel desapilado
+     * Elimina el nivel superior de la pila.
      */
     public int desapilarNivel() {
         if (niveles.size() <= 1) {
@@ -59,46 +54,22 @@ public class PilaIdentacion {
     }
 
     /**
-     * Valida si el nivel recibido está dentro del rango permitido.
-     *
-     * @param nivel nivel a validar
-     * @return true si es válido
+     * Valida si el nivel recibido está dentro del rango permitido (0 a maxNiveles).
      */
     public boolean nivelValido(int nivel) {
         return nivel >= 0 && nivel <= maxNiveles;
     }
 
     /**
-     * Indica si solo queda el nivel base.
-     *
-     * @return true si está en base
+     * Verifica si la pila ha regresado a su estado inicial.
      */
     public boolean estaEnBase() {
         return niveles.size() == 1 && niveles.peek() == 0;
     }
 
     /**
-     * Reinicia la pila al estado base.
-     */
-    public void reset() {
-        niveles.clear();
-        niveles.push(0);
-    }
-
-    /**
-     * Retorna el máximo de niveles permitidos.
-     *
-     * @return máximo de niveles
-     */
-    public int getMaxNiveles() {
-        return maxNiveles;
-    }
-
-    /**
-     * Valida si el programa terminó en nivel 0.
-     *
-     * @param lineaUltima última línea procesada
-     * @return true si terminó correctamente
+     * Valida si el programa terminó correctamente en nivel 0.
+     * Corregido: sin etiquetas de referencia que causen errores de compilación.
      */
     public boolean validarCierreFinal(int lineaUltima) {
         if (!estaEnBase()) {
@@ -108,5 +79,13 @@ public class PilaIdentacion {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Reinicia la pila al estado base 0.
+     */
+    public void reset() {
+        niveles.clear();
+        niveles.push(0);
     }
 }

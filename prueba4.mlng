@@ -1,0 +1,5 @@
+int sumar(int x, int y)
+    return x + y;
+
+int resultado = sumar(8, 3);
+write(resultado);
