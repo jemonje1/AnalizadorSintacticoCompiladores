@@ -1,0 +1,24 @@
+REPORTE DE COMPILACION MINILANG
+Archivo: prueba1.mlng
+
+
+--- LISTADO DE TOKENS ---
+line 1, col 1: [ID, "write"]
+line 1, col 6: [PARENIZQ, "("]
+line 1, col 7: [STRINGWORD, ""Hola Mundo""]
+line 1, col 19: [PARENDER, ")"]
+line 1, col 20: [PYC, ";"]
+line 1, col 21: [EOF, "$"]
+
+--- RESUMEN DE ERRORES ---
+Total de errores: 6
+
+[SINTACTICO] line 1, col 1: ERROR Sintáctico. No se esperaba el token 'write'
+[SINTACTICO] line 1, col 6: ERROR Sintáctico. No se esperaba el token '('
+[SINTACTICO] line 1, col 7: ERROR Sintáctico. No se esperaba el token '"Hola Mundo"'
+[SINTACTICO] line 1, col 19: ERROR Sintáctico. No se esperaba el token ')'
+[SINTACTICO] line 1, col 20: ERROR Sintáctico. No se esperaba el token ';'
+[SINTACTICO] line 1, col 21: ERROR Sintáctico. No se esperaba el token '$'
+
+--- RESULTADO FINAL ---
+COMPILACION FALLIDA - CADENA RECHAZADA

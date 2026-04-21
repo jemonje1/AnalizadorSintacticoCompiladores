@@ -1,0 +1,32 @@
+# MiniLang - Archivo con errores léxicos (>=5)
+# Incluye: indentación inválida, carácter inesperado, número mal formado, string sin cerrar (EOF),
+# identificador >31.
+
+func int mul(int a, int b):
+    int r;
+    r = a * b;
+    return r;
+
+int total;
+total = mul(2, 3);
+Write(total);
+
+# 1) Indentación inválida: aumenta a 5 tabs y luego baja a 4 (nivel inexistente)
+while total < 10:
+					total = total + 1;   # 5 espacios (nuevo nivel)
+				Write(total);         # 4 espacios (nivel no existe en la pila)
+
+# 2) Carácter inesperado: '$' (aparece como carácter suelto no válido)
+int cost$;
+cost$ = 5;
+
+# 3) Número mal formado: dos puntos decimales / patrón inválido
+float z;
+z = 0.12.3;
+
+# 4) Identificador demasiado largo (>31)
+string this_identifier_name_is_way_way_way_too_long_for_limit;
+this_identifier_name_is_way_way_way_too_long_for_limit = "ok";
+
+# 5) Cadena sin cerrar antes de EOF
+Write("Fin

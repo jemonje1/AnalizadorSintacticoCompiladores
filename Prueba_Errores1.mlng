@@ -1,0 +1,28 @@
+# MiniLang - Archivo con errores léxicos (>=5)
+# Errores esperados (ejemplos): carácter inesperado, cadena sin cerrar, número mal formado,
+# indentación inválida, identificador >31 (truncar y continuar).
+
+int x;
+x = 10;
+
+# 1) Carácter inesperado: '@'
+x = x @ 2;
+
+# 2) Cadena sin cerrar antes de NEWLINE
+Write("Hola Mundo);
+
+# 3) Número mal formado (dos puntos decimales)
+float y;
+y = 12..3;
+
+# 4) Identificador demasiado largo (>31)
+int thisIdentifierIsDefinitelyMoreThanThirtyOneChars123;
+thisIdentifierIsDefinitelyMoreThanThirtyOneChars123 = 1;
+
+# 5) Indentación inválida (dedent a un nivel inexistente)
+if x > 0:
+				Write("ok");
+		Write("bad indent");  # (2 tabs) debería provocar error de indentación
+
+# 6) Otro carácter inesperado: '¿'
+Write(¿x);
