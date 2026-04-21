@@ -4,15 +4,22 @@ public class Token {
     public enum TipoToken {
         // Palabras reservadas
         INT, FLOAT, STRING, BOOL, IF, ELSE, FOR, WHILE, TRUE, FALSE, READ, WRITE,
+
         // Identificadores y literales
         ID, INTNUM, FLOATNUM, PERNUM, STRINGWORD,
+
+        // Comentarios
+        COMMENT,
+
         // Operadores y símbolos
         LLAVEIZQ, LLAVEDER, PARENIZQ, PARENDER, PYC, COMA,
         SUM, REST, MULT, DIV, IGUAL,
         MENOR, MAYOR, MEIGUAL, MAIGUAL, ESIGUAL, NOIGUAL,
         INC, DEC, NOT,
+
         // Control de flujo espacial
         NEWLINE, INDENT, DEDENT,
+
         // Finalización
         EOF, DESCONOCIDO
     }
@@ -29,10 +36,21 @@ public class Token {
         this.columna = columna;
     }
 
-    public TipoToken getTipo() { return tipo; }
-    public String getLexema() { return lexema; }
-    public int getLinea() { return linea; }
-    public int getColumna() { return columna; }
+    public TipoToken getTipo() {
+        return tipo;
+    }
+
+    public String getLexema() {
+        return lexema;
+    }
+
+    public int getLinea() {
+        return linea;
+    }
+
+    public int getColumna() {
+        return columna;
+    }
 
     @Override
     public String toString() {

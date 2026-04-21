@@ -1,0 +1,50 @@
+REPORTE DE COMPILACION MINILANG
+Archivo: prueba3.mlng
+
+--- LISTADO DE TOKENS ---
+line 1, col 1: [INT, "int"]
+line 1, col 5: [ID, "numero"]
+line 1, col 12: [IGUAL, "="]
+line 1, col 14: [INTNUM, "0"]
+line 1, col 15: [PYC, ";"]
+line 1, col 16: [NEWLINE, "\n"]
+line 2, col 1: [READ, "read"]
+line 2, col 5: [PARENIZQ, "("]
+line 2, col 6: [ID, "numero"]
+line 2, col 12: [PARENDER, ")"]
+line 2, col 13: [PYC, ";"]
+line 2, col 14: [NEWLINE, "\n"]
+line 3, col 1: [IF, "if"]
+line 3, col 4: [PARENIZQ, "("]
+line 3, col 5: [ID, "numero"]
+line 3, col 12: [MAYOR, ">"]
+line 3, col 14: [INTNUM, "0"]
+line 3, col 15: [PARENDER, ")"]
+line 3, col 16: [NEWLINE, "\n"]
+line 4, col 1: [INDENT, "INDENT"]
+line 4, col 5: [WRITE, "write"]
+line 4, col 10: [PARENIZQ, "("]
+line 4, col 11: [STRINGWORD, ""El número es positivo""]
+line 4, col 34: [PARENDER, ")"]
+line 4, col 35: [PYC, ";"]
+line 4, col 36: [NEWLINE, "\n"]
+line 5, col 1: [DEDENT, "DEDENT"]
+line 5, col 1: [ELSE, "else"]
+line 5, col 5: [NEWLINE, "\n"]
+line 6, col 1: [INDENT, "INDENT"]
+line 6, col 5: [WRITE, "write"]
+line 6, col 10: [PARENIZQ, "("]
+line 6, col 11: [STRINGWORD, ""El número no es positivo""]
+line 6, col 37: [PARENDER, ")"]
+line 6, col 38: [PYC, ";"]
+line 6, col 39: [NEWLINE, "\n"]
+line 7, col 1: [DEDENT, "DEDENT"]
+line 7, col 1: [EOF, "$"]
+
+--- RESUMEN DE ERRORES ---
+Total de errores: 1
+
+[SINTACTICO] line 7, col 1: ERROR Sintactico. Cadena incompleta o estructura no reducida. Pila final: [INT, ID, IGUAL, E, PYC, READ, PARENIZQ, Write_List, PARENDER, PYC, Stmt, Else_Stmt]
+
+--- RESULTADO FINAL ---
+COMPILACION FALLIDA - CADENA RECHAZADA

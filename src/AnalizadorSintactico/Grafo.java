@@ -1,32 +1,17 @@
 package AnalizadorSintactico;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Grafo {
-    private final Map<Integer, Estado> estados = new HashMap<>();
+    private final List<Reglas> reglas = new ArrayList<>();
 
-    public void agregarEstado(Estado estado) {
-        estados.put(estado.getId(), estado);
+    public void agregarRegla(Reglas regla) {
+        reglas.add(regla);
     }
 
-    public void agregarShift(int desde, String simbolo, int hacia) {
-        estados.get(desde).getShifts().put(simbolo, hacia);
-    }
-
-    public void agregarGoto(int desde, String simbolo, int hacia) {
-        estados.get(desde).getGotos().put(simbolo, hacia);
-    }
-
-    public void agregarReduce(int desde, String lookahead, Reglas regla) {
-        estados.get(desde).getReduces().put(lookahead, regla);
-    }
-
-    public void agregarAceptar(int desde, String lookahead) {
-        estados.get(desde).getAccepts().put(lookahead, true);
-    }
-
-    public Estado obtenerEstado(int id) {
-        return estados.get(id);
+    public List<Reglas> getReglas() {
+        return Collections.unmodifiableList(reglas);
     }
 }
